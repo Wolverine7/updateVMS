@@ -1,0 +1,31 @@
+name: Update and reboot VMs
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-and-reboot:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: SSH into VMs
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          sudo yum update -y
+          sudo rpm -qa | grep kernel | grep -v `uname -r` | xargs sudo yum -y remove
+          sudo reboot
+
+    - name: Wait for VMs to come back
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          until ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'exit'; do sleep 1; done
