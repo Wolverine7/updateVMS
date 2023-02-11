@@ -23,10 +23,10 @@ jobs:
           fi
 
           OLD_KERNEL_AVAILABLE=$(sudo rpm -qa | grep kernel | grep -v `uname -r` | wc -l)
-          if [ "$OLD_KERNEL_AVAILABLE" -gt "0" ]; then
+          sudo yum update -y
+          if sudo rpm -qa | grep kernel | grep -v `uname -r`; then
           sudo rpm -qa | grep kernel | grep -v `uname -r` | xargs sudo yum -y remove
           fi
-
           sudo reboot
 
     - name: Wait for VMs to come back
