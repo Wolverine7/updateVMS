@@ -28,7 +28,7 @@ jobs:
             echo "No old kernels to remove"  
           fi
           echo "Rebooting the machine..."
-          sudo reboot
+          # sudo reboot
 
     - name: Wait for VMs to come back
       uses: appleboy/ssh-action@master
@@ -42,4 +42,6 @@ jobs:
           if [ $? -ne 0 ]; then
             echo "Error: Failed to connect to the VM"
             exit 1
+          else
+            echo "Success"
           fi
