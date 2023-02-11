@@ -29,7 +29,7 @@ jobs:
           fi
           echo "Rebooting the machine..."
           sudo reboot
-          sleep 60
+          sleep 600
 
     - name: Wait for VMs to come back
       uses: appleboy/ssh-action@master
