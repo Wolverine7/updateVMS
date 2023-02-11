@@ -29,23 +29,21 @@ jobs:
           fi
           echo "Rebooting the machine..."
           sudo reboot
+          exit 0
           sleep 600
 
-  wait-for-vms:
-    runs-on: ubuntu-latest
-    steps:        
-      - name: Wait for VMs to come back
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
-          script: |
-            echo "Running vm to comeback"
-            until ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'exit'; do sleep 1000; done
-            if [ $? -ne 0 ]; then
-              echo "Error: Failed to connect to the VM"
-              exit 1
-            else
-              echo "Success"
-            fi
+    - name: Wait for VMs to come back
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          echo "Running vm to comeback"
+          until ping -c1 ${{ secrets.HOST }}; do sleep 1; done
+          if ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'exit'; then
+            echo "Success: VM is back up and running"
+          else
+            echo "Error: Failed to connect to the VM"
+            exit 1
+          fi
