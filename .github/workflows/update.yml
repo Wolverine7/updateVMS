@@ -17,7 +17,16 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         script: |
+          UPDATES_AVAILABLE=$(sudo yum check-update | awk '{print $1}' | grep -v '^$' | wc -l)
+          if [ "$UPDATES_AVAILABLE" -gt "0" ]; then
           sudo yum update -y
+          fi
+
+          OLD_KERNEL_AVAILABLE=$(sudo rpm -qa | grep kernel | grep -v `uname -r` | wc -l)
+          if [ "$OLD_KERNEL_AVAILABLE" -gt "0" ]; then
+          sudo rpm -qa | grep kernel | grep -v `uname -r` | xargs sudo yum -y remove
+          fi
+
           sudo reboot
 
     - name: Wait for VMs to come back
