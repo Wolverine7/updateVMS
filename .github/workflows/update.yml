@@ -17,7 +17,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         script: |
-          sudo yum update
+          sudo yum update -y
           sudo rpm -qa | grep kernel | grep -v `uname -r` | xargs sudo yum -y remove
           sudo reboot
 
@@ -28,4 +28,4 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         script: |
-          until ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'exit'; do sleep 10; done
+          until ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'exit'; do sleep 1000; done
