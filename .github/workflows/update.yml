@@ -38,3 +38,7 @@ jobs:
         script: |
           echo "Running vm to comeback"
           until ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'exit'; do sleep 1000; done
+          if [ $? -ne 0 ]; then
+            echo "Error: Failed to connect to the VM"
+            exit 1
+          fi
