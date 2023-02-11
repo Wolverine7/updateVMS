@@ -17,15 +17,11 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         script: |
-          UPDATES_AVAILABLE=$(sudo yum check-update | awk '{print $1}' | grep -v '^$' | wc -l)
-          if [ "$UPDATES_AVAILABLE" -gt "0" ]; then
-          sudo yum update -y
+          if sudo yum check-update; then
+            sudo yum update -y
           fi
-
-          OLD_KERNEL_AVAILABLE=$(sudo rpm -qa | grep kernel | grep -v `uname -r` | wc -l)
-          sudo yum update -y
           if sudo rpm -qa | grep kernel | grep -v `uname -r`; then
-          sudo rpm -qa | grep kernel | grep -v `uname -r` | xargs sudo yum -y remove
+            sudo rpm -qa | grep kernel | grep -v `uname -r` | xargs sudo yum -y remove
           fi
           sudo reboot
 
