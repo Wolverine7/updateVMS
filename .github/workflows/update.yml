@@ -18,7 +18,6 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         script: |
           sudo yum update -y
-          sudo rpm -qa | grep kernel | grep -v `uname -r` | xargs sudo yum -y remove
           sudo reboot
 
     - name: Wait for VMs to come back
