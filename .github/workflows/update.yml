@@ -19,9 +19,13 @@ jobs:
         script: |
           if sudo yum check-update; then
             sudo yum update -y
+          else
+            echo "No updates available"
           fi
           if sudo rpm -qa | grep kernel | grep -v `uname -r`; then
             sudo rpm -qa | grep kernel | grep -v `uname -r` | xargs sudo yum -y remove
+          else
+            echo "No old kernels to remove"  
           fi
           sudo reboot
 
