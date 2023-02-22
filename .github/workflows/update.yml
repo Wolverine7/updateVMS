@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   update-and-reboot:
@@ -29,7 +30,6 @@ jobs:
           fi
           echo "Rebooting the machine..."
           sudo reboot
-          exit 0
           sleep 600
 
     - name: Wait for VMs to come back
