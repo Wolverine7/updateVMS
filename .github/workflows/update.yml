@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: SSH into VMs
+    - name: SSH into VMs and update
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
@@ -28,9 +28,17 @@ jobs:
           else
             echo "No old kernels to remove"  
           fi
+
+    - name: Reboot VMs
+      uses: appleboy/ssh-action@master
+      if: always()
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
           echo "Rebooting the machine..."
           sudo reboot
-          sleep 600
 
     - name: Wait for VMs to come back
       uses: appleboy/ssh-action@master
@@ -39,11 +47,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         script: |
-          echo "Running vm to comeback"
+          sleep 600
+          echo "Waiting for VMs to come back..."
           until ping -c1 ${{ secrets.HOST }}; do sleep 1; done
-          if ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'exit'; then
-            echo "Success: VM is back up and running"
-          else
-            echo "Error: Failed to connect to the VM"
-            exit 1
-          fi
+          echo "Success: VMs are back up and running"
