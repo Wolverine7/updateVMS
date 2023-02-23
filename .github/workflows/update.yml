@@ -30,23 +30,16 @@ jobs:
           fi
 
     - name: Reboot VMs
-      run: |
-        expect - <<EOF
-        spawn ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }} "sudo reboot"
-        expect {
-          "(yes/no)?" {
-            send "yes\r"
-            exp_continue
-          }
-          "*password:" {
-            send "${{ secrets.PASSWORD }}\r"
-            exp_continue
-          }
-          "Connection closed by remote host" {
-            puts "Reboot complete"
-          }
-        }
-        EOF
+      uses: appleboy/ssh-action@master
+      if: always()
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+          echo "Rebooting the machine..."
+          expect -c 'spawn ssh $env(USERNAME)@$env(HOST) sudo reboot; expect "*?assword:*"; send -- "$env(PASSWORD)\r"; interact;'
+
 
     - name: Wait for VMs to come back
       uses: appleboy/ssh-action@master
