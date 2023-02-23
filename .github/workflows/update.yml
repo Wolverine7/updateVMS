@@ -49,6 +49,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         script: |
+          sudo yum install -y nc
           echo "Waiting for VMs to come back..."
           until nc -w 1 -z ${{ secrets.HOST }} 22; do sleep 1; done
           echo "Success: VMs are back up and running"
