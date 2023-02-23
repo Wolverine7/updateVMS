@@ -7,16 +7,16 @@ on:
   workflow_dispatch:
     inputs:
       hosts:
-        description: 'Comma-separated list of VM hosts to update and reboot'
+        description: 'Comma-separated list of VM host IP addresses'
         required: true
 
 jobs:
   update-and-reboot:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        host: ${{ split(inputs.hosts, ',') }}
+    # strategy:
+    #   matrix:
+    #     host: ${{ inputs.hosts, ',') }}
     
     steps:
       - name: SSH into VM and update
