@@ -1,10 +1,14 @@
 name: Update and reboot VMs
 
 on:
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
   workflow_dispatch:
+    inputs:
+      hosts:
+        description: 'Comma-separated list of VM hosts to update and reboot'
+        required: true
 
 jobs:
   update-and-reboot:
@@ -12,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        host: ["54.83.81.36"]
+        host: ${{ split(inputs.hosts, ',') }}
     
     steps:
       - name: SSH into VM and update
