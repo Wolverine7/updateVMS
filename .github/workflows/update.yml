@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        host: ["35.173.30.185"]
+        host: ["54.83.81.36"]
     
     steps:
       - name: SSH into VM and update
