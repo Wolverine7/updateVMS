@@ -49,7 +49,6 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         script: |
-          sleep 120
           echo "Waiting for VMs to come back..."
-          until ping -c1 ${{ secrets.HOST }}; do sleep 1; done
+          until nc -w 1 -z ${{ secrets.HOST }} 22; do sleep 1; done
           echo "Success: VMs are back up and running"
