@@ -37,6 +37,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         script: |
+          sudo apt-get install expect
           echo "Rebooting the machine..."
           expect -c 'spawn ssh $env(USERNAME)@$env(HOST) sudo reboot; expect "*?assword:*"; send -- "$env(PASSWORD)\r"; interact;'
 
