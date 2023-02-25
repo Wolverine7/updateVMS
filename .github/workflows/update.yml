@@ -10,11 +10,14 @@ on:
 jobs:
   update-and-reboot:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        host: ${{ split(inputs.hosts, ',') }}
     steps:
       - name: SSH into VM and update
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ inputs.host }}
+          host: ${{ matrix.host }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           script: |
