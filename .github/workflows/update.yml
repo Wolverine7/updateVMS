@@ -18,7 +18,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           script: |
-            echo "Connecting to host ${{ matrix.host }}..."
+            echo "Connecting to host ${{ inputs.host }}..."
             if yum list updates | grep -q -v "^$"; then
               sudo yum update -y
             else
