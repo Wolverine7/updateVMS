@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        host: ${{ split(inputs.hosts, ',') }}
+        host: ${{ fromJson(inputs.hosts) }}
     steps:
       - name: SSH into VM and update
         uses: appleboy/ssh-action@master
