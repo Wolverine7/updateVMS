@@ -1,9 +1,4 @@
-name: Update and reboot VMs
-
 on:
-  # push:
-  #   branches:
-  #     - main
   workflow_dispatch:
     inputs:
       hosts:
@@ -13,11 +8,6 @@ on:
 jobs:
   update-and-reboot:
     runs-on: ubuntu-latest
-
-    # strategy:
-    #   matrix:
-    #     host: ${{ inputs.hosts, ',') }}
-    
     steps:
       - name: SSH into VM and update
         uses: appleboy/ssh-action@master
@@ -26,6 +16,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           script: |
+            echo "Connecting to host ${{ matrix.host }}..."
             if yum list updates | grep -q -v "^$"; then
               sudo yum update -y
             else
@@ -45,7 +36,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           script: |
-            echo "Rebooting the machine..."
+            echo "Rebooting host ${{ matrix.host }}..."
             expect -c 'spawn ssh $env(USERNAME)@$env(HOST) sudo reboot; expect "*?assword:*"; send -- "$env(PASSWORD)\r"; interact;'
       
       - name: Wait for VM to come back
@@ -55,6 +46,6 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           script: |
-            echo "Waiting for VM to come back..."
+            echo "Waiting for host ${{ matrix.host }} to come back..."
             until nc -z -v -w5 ${{ matrix.host }} 22; do sleep 5; done
-            echo "Success: VM is back up and running"
+            echo "Success: Host ${{ matrix.host }} is back up and running"
