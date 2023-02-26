@@ -42,6 +42,7 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           script: |
             echo "Rebooting host ${{ matrix.host }}..."
+            sudo yum install -y expect
             expect -c 'spawn ssh $env(USERNAME)@$env(HOST) sudo reboot; expect "*?assword:*"; send -- "$env(PASSWORD)\r"; interact;'
       
       - name: Wait for VM to come back
