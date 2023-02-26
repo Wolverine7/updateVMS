@@ -52,6 +52,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           script: |
+            sudo yum install -y nc
             echo "Waiting for host ${{ matrix.host }} to come back..."
             until nc -z -v -w5 ${{ matrix.host }} 22; do sleep 5; done
             echo "Success: Host ${{ matrix.host }} is back up and running"
